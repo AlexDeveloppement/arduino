@@ -1,0 +1,39 @@
+#include <IRremote.h>
+#include <IRremoteInt.h>
+#include <LiquidCrystal.h>
+
+char print = '?';
+int recu = 0;
+
+const char DIN_RECEPTEUR_INFRAROUGE = 2;
+LiquidCrystal lcd(7, 8, 9, 10, 11, 12);
+
+IRrecv monRecepteurInfraRouge (DIN_RECEPTEUR_INFRAROUGE);
+
+decode_results messageRecu;
+
+void setup()
+{
+// screen
+ lcd.begin(16, 2);
+ lcd.print("Bouton : ");
+// screen IR
+ Serial.begin(9600);
+ monRecepteurInfraRouge.enableIRIn();
+ monRecepteurInfraRouge.blink13(true);
+}
+
+void loop()
+{
+  if (monRecepteurInfraRouge.decode(&messageRecu))
+  {
+    if (messageRecu.value == 0xFF6897){
+      {Serial.println("Touche 0");}
+      lcd.setCursor(0, 1);
+      lcd.print("Touche 0");
+    }
+    delay(500);
+    monRecepteurInfraRouge.resume();
+  }
+  delay(1);
+}
